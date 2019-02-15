@@ -1101,6 +1101,48 @@ $mysqli->close();
 
 
 
+##### 设置utf-8字符串
+
+在数据库连接完成后，添加以下代码
+
+```php
+/**
+ * sql连接初始化
+ */
+function sql_init()
+{
+    $mysqli = new mysqli(HOST, SQL_USERNAME, SQL_PASSWORD, SQL_DBNAME, SQL_PORT);
+    // 我使用下面这个方式设置字符集，但是返回的中文数据仍然是乱码
+    $mysqli->set_charset("utf-8");
+    $mysqli->query("set names 'utf8' ");
+    // $mysqli->query("set character_set_client=utf8");
+    $mysqli->query("set character_set_results=utf8");
+    return $mysqli;
+}
+```
+
+
+
+##### 数据更新
+
+想对数据库里的某一条数据的某一项或多项进行更新，需要用到`ON DUPLICATE KEY UPDATE`
+
+| id   | num         | date          | remarks |
+| ---- | ----------- | ------------- | ------- |
+| 1    | 13488889999 | 1550131999000 | test    |
+
+> 需求是：当原来数据库里没有这一个`num`的数据时，新增这一条数据，否则更新`data`和`remarks`。
+
+`id`是设置了主键的，保证了它的唯一性，然后需要给`num`设置**唯一**索引，当需要增加或者更新数据时，执行下面的语句:
+
+```sql
+INSERT INTO db (num,date,remarks) VALUES (13488889999,1549873770000,"msg") ON DUPLICATE KEY UPDATE date=1549873770000, remarks= "msg";
+```
+
+新增时，受影响的行数为1，更新时受影响的行数为2。
+
+
+
 #### session
 
 ##### 存储与获取
