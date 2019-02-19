@@ -324,6 +324,21 @@ $r->connect(HOST,PORT);
 
 
 
+#### 连接（Connection）
+
+##### SELECT
+
+`SELECT index`
+
+切换到指定数据库，数据库索引号用数值型表示，默认是在0号数据库
+
+```php
+// SECELT
+$redis->SELECT(0); # 成功则返回1，否则无返回信息
+```
+
+
+
 #### 键（Key）
 
 ##### EXISTS
@@ -344,7 +359,7 @@ var_dump($redis->exists('db'))  # key不存在 //bool(false)
 
 
 
-#### delete/unlink
+##### DELETE/UNLINK
 
 `DELETE/UNLINK key1 key2...`
 
@@ -376,7 +391,7 @@ $redis->unlink(Array('key1', 'key2'));
 
 `GET key`
 
-返回对应key所关联的字符串值，如果key不存在则返回`nil`（false），如果key所存储的值不是字符串，则返回一个错误，**`get`只能处理字符串值。**
+**返回值：**返回对应key所关联的字符串值，如果key不存在则返回`nil`（false），如果key所存储的值不是字符串，则返回一个错误，**`get`只能处理字符串值。**
 
 ```php
 //GET
@@ -420,18 +435,305 @@ $redis->SETNX('job', "code-farmer");  # job设置失败 //bool(false)
 
 
 
-#### 连接（Connection）
+##### APPEND
 
-##### SELECT
+`APPEND key value`
 
-`SELECT index`
+给一个指定的`key`的值追加字符。
 
-切换到指定数据库，数据库索引号用数值型表示，默认是在0号数据库
+**返回值：**追加后字符串的长度
 
 ```php
-// SECELT
-$redis->SELECT(0); # 成功则返回1，否则无返回信息
+// APPEND
+$redis->set('key', 'value1');
+$redis->append('key', 'value2'); /* 12 */
+$redis->get('key'); /* 'value1value2' */
 ```
+
+
+
+##### GETRANGE
+
+`GETRANGE key start end`
+
+
+
+
+
+
+
+#### 哈希（Hash）
+
+##### HSET
+
+`HSET key hashKey value`
+
+给指定`key`设置`hashKey`和值。
+
+**返回值：**如果成功则返回`1`；如果指定`key`已存在，则覆盖旧值并返回`0`，否则返回`false`。
+
+```php
+// HSET
+$redis->delete('h')
+$redis->hSet('h', 'key1', 'hello'); /* 1 */
+$redis->hGet('h', 'key1'); /* "hello" */
+
+$redis->hSet('h', 'key1', 'plop'); /* 0 */
+$redis->hGet('h', 'key1'); /* "plop" */
+```
+
+
+
+##### HSETNX
+
+`HSETNX key hashKey value`
+
+当指定的`key`不存在时，给指定`key`设置`hashKey`和值
+
+**返回值：**如果指定的`key`已存在，则返回`false`否则返回`ture`。
+
+```php
+// HSETNX
+$redis->delete('h')
+$redis->hSetNx('h', 'key1', 'hello'); /* TRUE */
+$redis->hSetNx('h', 'key1', 'world'); /* FALSE */
+```
+
+
+
+##### HGET
+
+`HGET key hashKey`
+
+获取指定`key`的hash格式的`key`对应的值。
+
+**返回值：**若成功则返回以字符串格式返回对应的值，否则返回`false`。
+
+
+
+##### HLEN
+
+`HLEN key`
+
+获取指定`key`存在的hash键值对的数量
+
+**返回值：**返回指定`key`里存在的hash的键值对数量。若指定`key`对应的数据不是hash格式或不存在指定`key`则返回`false`。
+
+```php
+// HLEN
+$redis->delete('h');
+$redis->hSet('h', 'key1', 'hello');
+$redis->hSet('h', 'key2', 'plop');
+$redis->hLen('h'); /* returns 2 */
+```
+
+
+
+##### HDEL
+
+`HDEL key hashKey1 hashKey2...`
+
+移除指定`key`里指定的hash的`key`。
+
+**返回值：**成功则返回成功删除的数量；如果要删除的hash的`key`不存在则返回`0`；如果指定的`key`不是hash格式，则返回`false`。
+
+
+
+##### HKEYS
+
+`HKEYS key`
+
+获取指定`key`里的所有hash的`key`。
+
+**返回值：**返回一个**关联数组**（`key`的顺序是随机的）。
+
+```php
+// HKEYS
+$redis->delete('h');
+$redis->hSet('h', 'a', 'x');
+$redis->hSet('h', 'b', 'y');
+$redis->hSet('h', 'c', 'z');
+$redis->hSet('h', 'd', 't');
+var_dump($redis->hKeys('h'));
+
+// 输出
+array(4) {
+  [0]=>
+  string(1) "a"
+  [1]=>
+  string(1) "b"
+  [2]=>
+  string(1) "c"
+  [3]=>
+  string(1) "d"
+}
+```
+
+
+
+##### HVALS
+
+`HVALS key`
+
+获取指定`key`里的所有hash的`value`。
+
+**返回值：**返回一个**关联数组**（`value`的顺序是随机的）。
+
+```php
+// HVALS
+$redis->delete('h');
+$redis->hSet('h', 'a', 'x');
+$redis->hSet('h', 'b', 'y');
+$redis->hSet('h', 'c', 'z');
+$redis->hSet('h', 'd', 't');
+var_dump($redis->hVals('h'));
+
+// 输出
+array(4) {
+  [0]=>
+  string(1) "x"
+  [1]=>
+  string(1) "y"
+  [2]=>
+  string(1) "z"
+  [3]=>
+  string(1) "t"
+}
+```
+
+
+
+##### HGETALL
+
+`HGETALL key`
+
+获取指定`key`里的hash对象。
+
+**返回值：**返回一个**关联数组**（`value`的顺序是随机的）。
+
+```php
+// HGETALL
+$redis->delete('h');
+$redis->hSet('h', 'a', 'x');
+$redis->hSet('h', 'b', 'y');
+$redis->hSet('h', 'c', 'z');
+$redis->hSet('h', 'd', 't');
+var_dump($redis->hGetAll('h'));
+
+// 输出
+array(4) {
+  ["a"]=>
+  string(1) "x"
+  ["b"]=>
+  string(1) "y"
+  ["c"]=>
+  string(1) "z"
+  ["d"]=>
+  string(1) "t"
+}
+```
+
+
+
+##### HEXISTS
+
+`HEXISTS key hashKey`
+
+检测指定`key`中是否含有指定的hash的`key`。
+
+**返回值：**如果存在，则返回`true`，否则返回`false`。
+
+```php
+// HEXISTS
+$redis->hSet('h', 'a', 'x');
+$redis->hExists('h', 'a'); /*  TRUE */
+$redis->hExists('h', 'NonExistingKey'); /* FALSE */
+```
+
+
+
+##### HINCRBY/HINCRBYFLOAT
+
+`HINCRBY/HINCRBYFLOAT key hashKey value`
+
+为指定的`key`的hash的`key`增加定量`value`。
+
+两者区别在于：`HINCRBY`的`value`只能是整数型，而`HINCRBYFLOAT`只能是浮点型。
+
+**返回值：**新的`value`
+
+```php
+// HINCRBY
+$redis->delete('h');
+$redis->hIncrBy('h', 'x', 2); /* returns 2: h[x] = 2 now. */
+$redis->hIncrBy('h', 'x', 1); /* h[x] ← 2 + 1. Returns 3 */
+```
+
+
+
+##### HMSET
+
+`HMSET key array`
+
+给指定的`key`赋值为hash，所有非字符串值都会被转换为字符串值，存储`null`值会变为空字符串值。
+
+**返回值：**成功为`true`，失败为`false`。
+
+```php
+// HMSET
+$redis->delete('user:1');
+$redis->hMSet('user:1', array('name' => 'Joe', 'salary' => 2000));// true
+$redis->hIncrBy('user:1', 'salary', 100); // 现在salary的值为2100.
+```
+
+
+
+##### HMGET
+
+`HMGET key array(hashKey)`
+
+获取指定`key`中的hash中指定的`key`关联的值。
+
+**返回值：**返回一个**关联数组**。
+
+```php
+// HMGET
+$redis->delete('h');
+$redis->hSet('h', 'field1', 'value1');
+$redis->hSet('h', 'field2', 'value2');
+$redis->hMGet('h', array('field1', 'field2')); 
+/* returns array('field1' => 'value1', 'field2' => 'value2') */
+```
+
+
+
+##### HSCAN
+
+`HSCAN key iterator [pattern count]`
+
+**参数说明：**
+
+key：要遍历的集合名，
+
+iterator：给函数内部运行的迭代器，需要提前声明为`null`，
+
+pattern：要匹配的字符（需传入字符串格式），
+
+count：一次要返回的数据条数。
+
+```php
+// HSCAN
+$it = null;
+// 下面这行设置使其不会返回空结果
+$redis->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
+while($arr_keys = $redis->hScan('hash', $it)) {
+    foreach($arr_keys as $str_field => $str_value) {
+        echo "$str_field => $str_value\n"; /* 打印出hash的键和值 */
+    }
+}
+```
+
+
 
 
 
@@ -455,8 +757,6 @@ $redis->lPush('key1', 'A'); // returns 3
 
 
 
-
-
 #### 集合（Set）
 
 ##### SADD
@@ -473,6 +773,38 @@ $redis->sAdd('key1' , 'member1'); /* 1, 'key1' => {'member1'} */
 $redis->sAdd('key1' , 'member2', 'member3'); /* 2, 'key1' => {'member1', 'member2', 'member3'}*/
 $redis->sAdd('key1' , 'member2'); /* 0, 'key1' => {'member1', 'member2', 'member3'}*/
 ```
+
+
+
+##### SSCAN
+
+`SSCAN key iterator [pattern count] `
+
+**参数说明：**
+
+key：要遍历的集合名，
+
+iterator：给函数内部运行的迭代器，需要提前声明为`null`，
+
+pattern：要匹配的字符（需传入字符串格式），
+
+count：一次要返回的数据条数。
+
+**返回值：**返回一个数组或`false`
+
+```php
+// SSCAN
+$it = null;
+// 下面这行设置使其不会返回空结果
+$r->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
+while ($arr = $r->sscan("list", $it, $searchNum, 1)) {
+  foreach ($arr as $str_mem) {
+    echo "Member: $str_mem\n";
+  }
+}
+```
+
+
 
 
 
