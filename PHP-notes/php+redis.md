@@ -324,5 +324,155 @@ $r->connect(HOST,PORT);
 
 
 
-#### GET key
+#### 键（Key）
+
+##### EXISTS
+
+`EXISTS key`
+
+检测指定key是否存在
+
+**返回值：**若`key`存在，返回`1`，否则返回`0`。
+
+```php
+// EXISTS
+$redis->set('db',"redis"); //bool(true) 
+var_dump($redis->exists('db'));  # key存在 //bool(true) 
+$redis->del('db');   # 删除key //int(1)
+var_dump($redis->exists('db'))  # key不存在 //bool(false)
+```
+
+
+
+#### delete/unlink
+
+`DELETE/UNLINK key1 key2...`
+
+移除指定`key`。
+
+若redis版本大于4.0时，可使用`unlink`对`key进行`非阻塞的异步删除。
+
+**返回值：**移除`key`的数量。**unlink由于是异步删除，所以无返回值。**
+
+```php
+// DELETE UNLINK
+$redis->delete('key1', 'key2'); /* return 2 */
+$redis->delete(array('key3', 'key4')); /* return 2 */
+
+/* 如果使用Redis >= 4.0.0 你可以使用unlink */
+$redis->unlink('key1', 'key2');
+$redis->unlink(Array('key1', 'key2'));
+```
+
+
+
+
+
+
+
+#### 字符串（String）
+
+##### GET 
+
+`GET key`
+
+返回对应key所关联的字符串值，如果key不存在则返回`nil`（false），如果key所存储的值不是字符串，则返回一个错误，**`get`只能处理字符串值。**
+
+```php
+//GET
+var_dump($redis->GET('fake_key')); #(nil) // return bool(false)
+```
+
+
+
+##### SET
+
+`SET key value`
+
+为指定的`key`设置字符串`value`值，若当前`key`已存在，则覆盖旧值。
+
+**返回值：**总是返回`OK(TRUE)`，因为`SET`不可能失败。
+
+```php
+// SET
+$redis->SET('apple', 'www.apple.com');#OK  // bool(true)
+$redis->GET('apple');//"www.apple.com"
+
+$redis->SET('greet_list', "yooooooooooooooooo");   # 覆盖列表类型 #OK //bool(true)
+$redis->TYPE('greet_list');#string // int(1)
+```
+
+
+
+##### SETNX
+
+`SETNX key value`
+
+为指定的`key`设置字符串`value`值，若当前`key`已存在，**则不做任何动作**。
+
+**返回值：**设置成功，返回`1`。设置失败，返回`0`。
+
+```php
+// SETNX
+$redis->SETNX('job', "programmer");  # job设置成功 //bool(true)
+$redis->SETNX('job', "code-farmer");  # job设置失败 //bool(false)
+```
+
+
+
+#### 连接（Connection）
+
+##### SELECT
+
+`SELECT index`
+
+切换到指定数据库，数据库索引号用数值型表示，默认是在0号数据库
+
+```php
+// SECELT
+$redis->SELECT(0); # 成功则返回1，否则无返回信息
+```
+
+
+
+#### 列表（List）
+
+##### LPUSH
+
+`LPUSH key value [value ...]`
+
+将一个或多个值插入表头为`key`的列表，添加的顺序为在列表左端（头端）加入。
+
+**返回值：**成功则返回列表的长度。若指定的`key`已存在且不是列表，则返回`false`。
+
+```php
+// LPUSH
+$redis->lPush('key1', 'C'); // returns 1
+$redis->lPush('key1', 'B'); // returns 2
+$redis->lPush('key1', 'A'); // returns 3
+/* list: [ 'A', 'B', 'C' ] */
+```
+
+
+
+
+
+#### 集合（Set）
+
+##### SADD
+
+`SADD key value...`
+
+将值添加到指定`key`中。
+
+**返回值：**若成功则返回这次添加的元素数量，如果值已存在与该集合，则返回`false`。
+
+```php
+// SADD
+$redis->sAdd('key1' , 'member1'); /* 1, 'key1' => {'member1'} */
+$redis->sAdd('key1' , 'member2', 'member3'); /* 2, 'key1' => {'member1', 'member2', 'member3'}*/
+$redis->sAdd('key1' , 'member2'); /* 0, 'key1' => {'member1', 'member2', 'member3'}*/
+```
+
+
 
