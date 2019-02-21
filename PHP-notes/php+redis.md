@@ -381,7 +381,16 @@ $redis->unlink(Array('key1', 'key2'));
 
 
 
+##### DBSIZE
 
+获取当前数据库的`key`的总数。
+
+**返回值：**返回一个当前数据库的`key`总数，整数型
+
+```php
+// DBSIZE
+$count = $redis->dbSize();
+```
 
 
 
@@ -711,6 +720,8 @@ $redis->hMGet('h', array('field1', 'field2'));
 
 `HSCAN key iterator [pattern count]`
 
+遍历哈希值里的每一项键值对。
+
 **参数说明：**
 
 key：要遍历的集合名，
@@ -806,5 +817,55 @@ while ($arr = $r->sscan("list", $it, $searchNum, 1)) {
 
 
 
+#### 事务
+
+##### MULIT
+
+标记一个事务的开始
+
+##### EXEC
+
+结束事务标记并开始执行事务
+
+##### DISCARD
+
+取消事务，放弃事务块内所有的命令
+
+```php
+// 事务
+$ret = $redis->multi()
+    ->set('key1', 'val1')
+    ->get('key1')
+    ->set('key2', 'val2')
+    ->get('key2')
+    ->exec();
+
+/*
+$ret == array(
+    0 => TRUE,
+    1 => 'val1',
+    2 => TRUE,
+    3 => 'val2');
+*/
+```
 
 
+
+##### WATCH、UNWATCH
+
+监视一个或多个`key`与取消监视一个或多个`key`。
+
+如果在`watch`和`exec`之间修改了被监视的`key`，则事务将会失败，返回`false`。
+
+**参数说明：**传入一个`key`字符串或数组。
+
+```php
+// watch、unwatch
+$redis->watch('x');
+$ret = $redis->multi()
+    ->incr('x')
+    ->exec();
+/*
+$ret = FALSE
+*/
+```
