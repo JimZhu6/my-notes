@@ -439,6 +439,48 @@ $ bash tcp_nanqinlang-fool-1.3.0.sh
 
 ## CentOs 7安装ssr
 
+使用root登录，在根目录依次运行这三条命令
+
+```shell
+wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
+chmod +x shadowsocks-all.sh
+./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
+```
+
+如果在运行第一条命令时提示找不到wget，则运行下面的命令安装
+
+```shell
+CentOS：
+yum -y install wget
+Ubuntu/Debian：
+apt-get -y install wget
+```
+
+然后会让你选择安装版本，此时选择`ShadowsocksR`。
+
+接下来依次提示你设置密码，端口号，加密方式，协议，混淆方式，然后就按任意键开始安装。
+
+
+
+### ssr常用命令
+
+```shell
+# 启动SSR：
+/etc/init.d/shadowsocks-r start
+# 退出SSR：
+/etc/init.d/shadowsocks-r stop
+# 重启SSR：
+/etc/init.d/shadowsocks-r restart
+# SSR状态：
+/etc/init.d/shadowsocks-r status
+# 卸载SSR：
+./shadowsocks-all.sh uninstall
+```
+
+如需修改参数，需修改配置文件`/etc/shadowsocks-r/config.json`
+
+
+
 ## CentOs 7安装Python3
 
 [参考链接](https://ssr.tools/31)

@@ -271,7 +271,7 @@ RDB方式会根据用户在配置项里的` save <seconds> <changes>`来进行�
 
 ## redis指令
 
-[指令文档](http://www.redis.net.cn/tutorial/3501.html) [官方文档](https://redis.io/documentation)
+[指令文档](http://www.redis.net.cn/tutorial/3501.html) [官方文档](https://redis.io/documentation) [GitHub地址](https://github.com/phpredis/phpredis)
 
 
 
@@ -784,6 +784,133 @@ $redis->sAdd('key1' , 'member1'); /* 1, 'key1' => {'member1'} */
 $redis->sAdd('key1' , 'member2', 'member3'); /* 2, 'key1' => {'member1', 'member2', 'member3'}*/
 $redis->sAdd('key1' , 'member2'); /* 0, 'key1' => {'member1', 'member2', 'member3'}*/
 ```
+
+
+
+##### SCARD/SSIZE
+
+`SCARD key` `SSIZE key`
+
+**返回值：**返回集合里存在的元素的数量，若这个`key`不是集合类型，则返回`0`。
+
+```php
+// SCARD/SSIZE
+$redis->sAdd('key1' , 'member1');
+$redis->sAdd('key1' , 'member2');
+$redis->sAdd('key1' , 'member3'); /* 'key1' => {'member1', 'member2', 'member3'}*/
+$redis->sCard('key1'); /* 3 */
+$redis->sCard('keyX'); /* 0 */
+```
+
+
+
+##### SISMEMBER/SCONTAINS
+
+`SISMEMBER key element` `SCONTAINS key element`
+
+检测指定元素是否存在于指定`key`的集合里
+
+**返回值：**存在则返回`true`，否则返回`false`。
+
+
+
+##### SDIFF
+
+`SDIFF key1 key2...`
+
+获取多个集合之间的**差集**
+
+**返回值：**返回一个字符串数组
+
+```php
+// SDIFF
+$redis->delete('s0', 's1', 's2');
+
+$redis->sAdd('s0', '1');
+$redis->sAdd('s0', '2');
+$redis->sAdd('s0', '3');
+$redis->sAdd('s0', '4');
+
+$redis->sAdd('s1', '1');
+$redis->sAdd('s2', '3');
+
+var_dump($redis->sDiff('s0', 's1', 's2'));
+
+/*
+array(2) {
+  [0]=>
+  string(1) "4"
+  [1]=>
+  string(1) "2"
+}
+  */
+```
+
+
+
+##### SINTER
+
+`SINTER key1 key2...`
+
+返回多个集合之间的**交集**。如果只传入一个`key`则返回这个`key`所有的元素。如果传入的`key`中有不存在的`key`则返回`false`。
+
+**返回值：**返回一个字符串数组，如果无向交的内容，则返回空数组。
+
+```php
+// SINTER
+$redis->sAdd('key1', 'val1');
+$redis->sAdd('key1', 'val2');
+$redis->sAdd('key1', 'val3');
+$redis->sAdd('key1', 'val4');
+
+$redis->sAdd('key2', 'val3');
+$redis->sAdd('key2', 'val4');
+
+$redis->sAdd('key3', 'val3');
+$redis->sAdd('key3', 'val4');
+
+var_dump($redis->sInter('key1', 'key2', 'key3'));
+
+/*
+array(2) {
+  [0]=>
+  string(4) "val4"
+  [1]=>
+  string(4) "val3"
+}
+  */
+```
+
+
+
+##### SMEMBERS/SGETMEMBERS
+
+获取指定集合`key`的所有元素
+
+```php
+// SMEMBERS/SGETMEMBERS
+$redis->delete('s');
+$redis->sAdd('s', 'a');
+$redis->sAdd('s', 'b');
+$redis->sAdd('s', 'a');
+$redis->sAdd('s', 'c');
+var_dump($redis->sMembers('s'));
+
+/*
+array(3) {
+  [0]=>
+  string(1) "c"
+  [1]=>
+  string(1) "a"
+  [2]=>
+  string(1) "b"
+}
+  */
+```
+
+
+
+
 
 
 
