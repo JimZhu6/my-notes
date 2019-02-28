@@ -28,7 +28,7 @@
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond $1 !^(index\.php|images|css|robots\.txt)
+RewriteCond $1 !^(index\.php|images|css|js|robots\.txt) 	# 这里写要排除的资源
 RewriteRule ^(.*)$ index.php/$1 [L]
 ```
 
@@ -415,7 +415,7 @@ class MY_Email extends CI_Email {
 
 
 
-#### 加载自定义扩展类
+#### 加载扩展的类
 
 要加载你的扩展类，还是使用和通常一样的语法。不用包含前缀。例如， 要加载上例中你扩展的 Email 类，你可以使用:
 
@@ -424,4 +424,61 @@ $this->load->library('email');
 ```
 
 
+
+### 资源自动加载
+
+- libraries/ 目录下的核心类
+- helpers/ 目录下的辅助函数
+- config/ 目录下的用户自定义配置文件
+- system/language/ 目录下的语言文件
+- models/ 目录下的模型类
+
+修改配置文件`application/config/autoload.php`，将其数组添加你要自动加载的资源。
+
+另外，如果你想让 CodeIgniter 使用 [Composer](https://getcomposer.org/) 的自动加载， 只需将 `application/config/config.php` 配置文件中的 `$config['composer_autoload']` 设置为 `TRUE` 或者设置为你自定义的路径。
+
+
+
+
+
+
+
+
+
+## 小技巧
+
+### 引用静态资源
+
+将需要引用的静态资源放在根目录，设置CI框架的`base_url`，设置自动加载`url`辅助函数。
+
+然后就可以在视图文件里进行引入：
+
+```php+HTML
+<link rel="stylesheet" href="<?=base_url()?>/assets/css/index.css">
+<script src="<?=base_url()?>/assets/js/index.js"></script>
+```
+
+
+
+### 使用Redis
+
+配置文件`application/config/config.php`中的`$config['sess_driver']`修改为`redis`。
+
+在`application/config/`目录下创建一个名为`redis.php`配置文件，可用参数如下：
+
+```php
+$config['socket_type'] = 'tcp'; //`tcp` or `unix`
+$config['socket'] = '/var/run/redis.sock'; // in case of `unix` socket type
+$config['host'] = '127.0.0.1';
+$config['password'] = NULL;
+$config['port'] = 6379;
+$config['timeout'] = 0;
+```
+
+使用方法例子
+
+```php
+$this->load->driver('cache');
+$this->cache->redis->save('foo', 'bar', 10);
+```
 
