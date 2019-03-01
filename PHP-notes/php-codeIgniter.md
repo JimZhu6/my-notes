@@ -482,3 +482,11 @@ $this->load->driver('cache');
 $this->cache->redis->save('foo', 'bar', 10);
 ```
 
+
+
+### 引用composer安装的库
+
+在项目跟目录下载号需要安装的包后，需要修改`application/config/config.php`里面的`$config['composer_autoload']`，指向vendor文件夹的`autoload.php`文件。
+
+然后在你需要用到这个库的**控制器**使用就可以了。
+
