@@ -439,11 +439,15 @@ $ bash tcp_nanqinlang-fool-1.3.0.sh
 
 ## CentOs 7安装ssr
 
-使用root登录，在根目录依次运行这三条命令
+[参考链接](https://ssr.tools/31)
 
-```shell
+登录root用户，按顺序执行下面三条命令
+
+```bash
 wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
+
 chmod +x shadowsocks-all.sh
+
 ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
 ```
 
@@ -456,11 +460,17 @@ Ubuntu/Debian：
 apt-get -y install wget
 ```
 
-然后会让你选择安装版本，此时选择`ShadowsocksR`。
+接下来将会让你选择参数
 
-接下来依次提示你设置密码，端口号，加密方式，协议，混淆方式，然后就按任意键开始安装。
+1. 选择安装版本：选择`ShadowsocksR`【2】
+2. 设置ssr密码
+3. 选择要使用的服务器端口号
+4. 选择加密方式
+5. 选择协议：建议选择`auth_aes128_md5`开始以下的几种
+6. 选择混淆方式
+7. 按任意键开始安装
 
-
+安装完成后重启服务器就好了，配置文件在`/etc/shadowsocks-r/config.json`
 
 ### ssr常用命令
 
@@ -482,47 +492,6 @@ apt-get -y install wget
 
 
 ## CentOs 7安装Python3
-
-[参考链接](https://ssr.tools/31)
-
-登录root用户，按顺序执行下面三条命令
-
-```bash
-wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
-
-chmod +x shadowsocks-all.sh
-
-./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
-```
-
-接下来将会让你选择参数
-
-1. 选择安装版本：选择`ShadowsocksR`【2】
-2. 设置ssr密码
-3. 选择要使用的服务器端口号
-4. 选择加密方式
-5. 选择协议：建议选择`auth_aes128_md5`开始以下的几种
-6. 选择混淆方式
-7. 按任意键开始安装
-
-安装完成后重启服务器就好了，配置文件在/etc/shadowsocks-r/config.json
-
-常用命令
-
-```bash
-# 启动SSR：
-/etc/init.d/shadowsocks-r start
-# 退出SSR：
-/etc/init.d/shadowsocks-r stop
-# 重启SSR：
-/etc/init.d/shadowsocks-r restart
-# SSR状态：
-/etc/init.d/shadowsocks-r status
-# 卸载SSR：
-./shadowsocks-all.sh uninstall
-```
-
-
 
 ### 修改软连接的方式升级Python3（不推荐）
 
