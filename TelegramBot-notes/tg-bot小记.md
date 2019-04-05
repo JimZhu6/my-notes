@@ -77,3 +77,33 @@
 
 更多信息参考[heroku官方文档](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
 
+
+
+## 在heroku中使用bable转换es6语法
+
+安装`bable`
+
+```shell
+npm install --save babel-preset-env && npm install --save-dev babel-cli
+```
+
+创建`.babelrc`，文件内容：
+
+```
+{ 
+  “presets”：[“env”] 
+}
+```
+
+然后在项目里新建src文件夹，将项目文件都放进去。
+
+更新`package.json`的`scripts`命令
+
+```
+"clean": "rm -rf build && mkdir build",
+"build-babel": "babel -d ./build ./src -s",
+"build": "npm run clean && npm run build-babel",
+"start": "npm run build && node ./build/app.js"
+```
+
+这时，理论上就能运行我们带有es6语法的js文件了。但是想要在heroku上运行你的项目，还需要执行这个命令：`heroku config:set NPM_CONFIG_PRODUCTION=false`。因为heroku默认是不会安装npm开发阶段的包，然而我们的`bable-cli`是正好是属于开发阶段的包，所以要改下配置。这时，即可正常运行项目了。
