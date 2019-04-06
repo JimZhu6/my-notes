@@ -73,7 +73,11 @@
 
 - 执行部署命令：`git push heroku master`
 
-在部署后，如果想查看实时日志，可执行命令`heroku logs --tail`获取
+在部署后，如果想查看实时日志，可执行命令`heroku logs --tail`获取。
+
+若需要停止项目运行，可输入`heroku ps:scale web=0`。
+
+之后你还想再启动的话，需要输入`heroku ps:scale web=1`。
 
 更多信息参考[heroku官方文档](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
 
