@@ -641,3 +641,92 @@ $ pyenv update
 ```bash
 yum groupinstall "Development Tools"
 ```
+
+
+
+## 安装Python3.7+pipenv
+
+### 安装Python3.7
+
+#### 1.安装依赖包
+
+```bash
+yum -y groupinstall "Development tools"
+yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
+```
+
+#### 2. 新建python3存放目录
+
+```bash
+mkdir /usr/local/python3
+```
+
+#### 3. 安装Python3
+
+注意，python3.7.0 需要安装libffi-devel
+
+```bash
+yum install libffi-devel -y
+```
+
+#### 4.下载Python3安装包
+
+大家可根据自己需求下载不同版本的Python3，本文下载的是Python3.7.0
+
+解压压缩包，进入解压目录，指定安装目录，安装Python3。
+
+```bash
+ wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz
+ tar -xvJf Python-3.7.0.tar.xz
+ cd Python-3.7.0
+ ./configure --prefix=/usr/local/python3
+ make && make install
+```
+
+安装Python3时，会自动安装pip。假如没有，需要自己手动安装。
+
+```bash
+yum -y install python-pip
+```
+
+#### 5. 创建软链接
+
+```bash
+ ln -s /usr/local/python3/bin/python3 /usr/bin/python3
+ ln -s /usr/local/python3/bin/pip3 /usr/bin/pip3
+```
+
+#### 6. 验证python的不同版本
+
+这时，分别输入`python`和`python3`将会看到两个版本的python共存。
+
+### 安装pipenv
+
+#### 1、安装虚拟环境
+
+```bash
+pip3 install --upgrade pip
+pip3 install --user --upgrade pipenv
+```
+
+#### 2、找到pipenv的路径
+
+```bash
+ find / -name "pipenv"    # 应该是会返回下面两条目录，我们选用第一行的目录来创建虚拟链接（选择短的那个？）
+>> /usr/local/python3/bin/pipenv
+>> /usr/local/python3/lib/python3.7/site-packages/pipenv
+```
+
+#### 3、创建虚拟链接
+
+```bash
+ln -s /usr/local/python3/bin/pipenv /usr/bin/pipenv
+```
+
+#### 4、检查pipenv
+
+```bash
+pipenv --version
+>> pipenv, version 2018.
+```
+
