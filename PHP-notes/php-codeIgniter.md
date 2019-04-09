@@ -490,3 +490,27 @@ $this->cache->redis->save('foo', 'bar', 10);
 
 然后在你需要用到这个库的**控制器**使用就可以了。
 
+
+
+### 部署CI框架的项目到服务器后遇到的问题
+
+#### 提示session路径错误
+
+前往`config.php`文件内将`$config['sess_save_path'] = NULL;`修改为`$config['sess_save_path'] = sys_get_temp_dir();`
+
+#### 访问CI接口404
+
+设置伪静态：
+
+```
+if (!-f $request_filename){
+  set $rule_0 1$rule_0;
+}
+if (!-d $request_filename){
+  set $rule_0 2$rule_0;
+}
+if ($rule_0 = "21"){
+  rewrite ^/api/(.*)$ /api/index.php/$1 last;
+}
+```
+

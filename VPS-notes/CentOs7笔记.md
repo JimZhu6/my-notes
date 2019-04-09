@@ -729,4 +729,3 @@ ln -s /usr/local/python3/bin/pipenv /usr/bin/pipenv
 pipenv --version
 >> pipenv, version 2018.
 ```
-
