@@ -503,6 +503,7 @@ $this->cache->redis->save('foo', 'bar', 10);
 设置伪静态：
 
 ```
+# CI接口在api文件夹内
 if (!-f $request_filename){
   set $rule_0 1$rule_0;
 }
@@ -511,6 +512,23 @@ if (!-d $request_filename){
 }
 if ($rule_0 = "21"){
   rewrite ^/api/(.*)$ /api/index.php/$1 last;
+}
+```
+
+或者
+
+```
+# CI直接在根目录部署
+if ($request_uri ~* ^/system)
+{
+ rewrite ^/(.*)$ /index.php?/$1 last;
+ break;
+}
+
+if (!-e $request_filename)
+{
+ rewrite ^/(.*)$ /index.php?/$1 last;
+ break;
 }
 ```
 
