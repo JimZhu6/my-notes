@@ -29,6 +29,7 @@
 ## [Python-notes](Python-notes/)
 
 - [Python爬虫笔记](Python-notes/Python爬虫笔记.md)
+- [Python笔记](Python-notes/Python笔记.md)
 
 
 
