@@ -532,3 +532,56 @@ if (!-e $request_filename)
 }
 ```
 
+
+
+### 通过axios使用post方式提交的错误
+
+当前端项目是使用`axios`时，通过post提交数据到CI框架的后台时，后台通过`$_POST`将接收不到这些数据，原因是：
+
+当我们使用`axios`时，`axios`将会帮我们将**请求数据**和**响应数据**将会自动转换为**JSON**数据。这时，我们的请求中的`Content-Type`会变成`application/json;charset=utf-8`。因为我们的参数是 JSON 对象，axios 帮我们做了一个 stringify 的处理。
+
+然而，我们服务端的要求是`Content-Type': 'application/x-www-form-urlencoded`，所以是接收不到前端发送的数据的。
+
+#### 解决方式1：使用URLSearchParams 传参
+
+使用[URLSearchParams](https://developer.mozilla.org/zh-CN/docs/Web/API/URLSearchParams)对URL进行字符串处理，需要注意的是，**IE浏览器不支持这个api**。
+
+```javascript
+let param = new URLSearchParams()
+param.append('username', 'admin')
+param.append('pwd', 'admin')
+axios({
+	method: 'post',
+	url: '/api/lockServer/search',
+	data: param
+})
+```
+
+
+
+#### 解决方式2：使用transformRequest转换数据
+
+```js
+import Qs from 'qs'
+axios({
+	url: '/api/lockServer/search',
+	method: 'post',
+	transformRequest: [function (data) {
+	    // 对 data 进行任意转换处理
+	    return Qs.stringify(data)
+    }],
+	data: {
+	    username: 'admin',
+		pwd: 'admin'
+	}
+})
+```
+
+
+
+#### 解决方式3：通过字符串拼接的方式传参
+
+```js
+axios.post('/api/lockServer/search',"userName='admin'&pwd='admin'");
+```
+
