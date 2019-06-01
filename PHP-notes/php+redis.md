@@ -992,3 +992,10 @@ $ret = $redis->multi()
 $ret = FALSE
 */
 ```
+
+
+
+
+
+## redis消息队列
+
