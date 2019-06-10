@@ -4,6 +4,13 @@
 
 
 
+## [JS-notes](JS-notes/)
+
+- [JS-note](JS-notes/JS-note.md)
+- [node-note](JS-notes/node-note.md)
+
+
+
 ## [VUE-notes](VUE-notes/)
 
 - [vue-note](VUE-notes/vue-note.md)
