@@ -1,5 +1,7 @@
 
 
+> 本文记录了开发时使用node遇到过的特殊错误事件
+
 ## Windows通过npm安装sleep模块
 
 [sleep模块](https://www.npmjs.com/package/sleep)可以让js同步阻塞。
