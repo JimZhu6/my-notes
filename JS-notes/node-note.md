@@ -1,6 +1,6 @@
 
 
-### Windows通过npm安装sleep模块
+## Windows通过npm安装sleep模块
 
 [sleep模块](https://www.npmjs.com/package/sleep)可以让js同步阻塞。
 
