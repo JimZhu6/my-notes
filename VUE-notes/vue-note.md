@@ -30,7 +30,7 @@ self.animalId3 = window.requestAnimationFrame(animation3Func);
 window.cancelAnimationFrame(this.animalId3);
 ```
 
-### Vue使用clipboard 1/2（将指定数据存储到剪贴板）
+### Vue使用clipboard（将指定数据存储到剪贴板）
 
 [git地址](https://github.com/zenorocha/clipboard.js)
 
@@ -133,4 +133,66 @@ export default {
 
 
 
+### Vue脚手架搭建的项目无法热更新解决方法
 
+> 本节来源：[vue项目无法热更新的解决办法](https://note.youdao.com/ynoteshare1/index.html?id=d30efe4bd16a9c084182046c85954876&type=note&from=groupmessage)
+
+修改`vue.config.js`
+
+```js
+module.exports = {
+  devServer: {
+    disableHostCheck: true
+  }
+}
+```
+
+
+
+### Vue项目build时移除console.log
+
+> 本节来源：[build时移除console.log()代码](https://note.youdao.com/ynoteshare1/index.html?id=85f391635c44b22275b9f75757c6e2f7&type=note&from=groupmessage)
+
+#### 1. 第一种方法
+
+1. 安装 `babel-plugin-transform-remove-console`
+2. 修改 `babel.config.js` 文件
+
+```js
+let transformRemoveConsolePlugin = []
+if (process.env.NODE_ENV === 'production') {
+  transformRemoveConsolePlugin = ['transform-remove-console']
+}
+
+module.exports = {
+  plugins: [
+    ...transformRemoveConsolePlugin
+  ]
+}
+```
+
+#### 2. 第二种方法
+
+1.安装 `terser-webpack-plugin`
+2.修改 `vue.config.js` 文件
+
+```js
+const TerserPlugin = require('terser-webpack-plugin')
+
+module.exports = {
+  configureWebpack: config => {
+    config
+      .optimization = {
+        minimizer: [
+          new TerserPlugin({
+            terserOptions: {
+              compress: {
+                drop_console: true
+              }
+            }
+          })
+        ]
+      }
+  }
+}
+```
