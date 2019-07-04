@@ -196,3 +196,45 @@ module.exports = {
   }
 }
 ```
+
+
+
+### VS Code调试vue代码
+
+> 本节来源：[vscode调试代码](https://note.youdao.com/ynoteshare1/index.html?id=2260a2d0b4954fb48c3fc75d76b8b807&type=note&from=groupmessage)
+
+1. `vscode` 安装 `Debugger for Chrome` 扩展
+2. 修改 vue.config.js
+
+```
+module.exports = {
+  configureWebpack: {
+    devtool: 'source-map'
+  }
+}
+```
+
+1. 按F5 选择 `Chorme` 生成配置文件。
+2. 替换配置文件。
+
+```
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "vuejs: chrome",
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceFolder}/src",
+      "breakOnLoad": true,
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
+    }
+  ]
+}
+```
+
+1. 如果提示 `Can't find Chrome` ，需要配置 `runtimeExecutable` 为浏览器可执行文件路径。
+2. 如果浏览器白屏并且 `vscode` 提示 `Cannot connect to the target`，则需配置 `userDataDir` 为 `true`.
