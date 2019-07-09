@@ -30,6 +30,7 @@
 
 - [ts热编译项目](TypeScript-notes/ts热编译项目.md)
 - [TypeScript笔记](TypeScript-notes/TypeScript笔记.md)
+- [js项目转ts](TypeScript-notes/js项目转ts.md)
 
 
 
