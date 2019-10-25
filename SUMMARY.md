@@ -47,6 +47,7 @@
 - [php+redis](PHP-notes/php+redis.md)
 - [php-codeIgniter](PHP-notes/php-codeIgniter.md)
 - [php抽奖算法](PHP-notes/php抽奖算法.md)
+- [Laravel笔记](PHP-notes/Laravel笔记.md)
 
 
 
