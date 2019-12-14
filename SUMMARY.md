@@ -77,4 +77,4 @@
 
 ## [Windows-notes](Windows-notes/)
 
-- [window-note](windows-notes/windows-note.md)
+- [window-note](Windows-notes/windows-note.md)
