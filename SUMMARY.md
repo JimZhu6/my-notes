@@ -7,7 +7,6 @@
 ## [JS-notes](JS-notes/)
 
 - [JS-note](JS-notes/JS-note.md)
-- [node-note](JS-notes/node-note.md)
 
 
 
@@ -78,3 +77,4 @@
 ## [Windows-notes](Windows-notes/)
 
 - [window-note](Windows-notes/windows-note.md)
+- [node-note](Windows-notes/node-note.md)
