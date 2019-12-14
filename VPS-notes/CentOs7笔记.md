@@ -729,3 +729,250 @@ ln -s /usr/local/python3/bin/pipenv /usr/bin/pipenv
 pipenv --version
 >> pipenv, version 2018.
 ```
+
+
+
+## 安装Docker
+
+### 一键安装脚本
+
+#### 国外VPS版
+
+```sh
+#!/bin/bash
+# remove old version
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine
+
+# remove all docker data 
+sudo rm -rf /var/lib/docker
+
+#  preinstall utils 
+sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+
+# add repository
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+
+# make cache
+sudo yum makecache fast
+
+# install the latest stable version of docker
+sudo yum install -y docker-ce
+
+# start deamon and enable auto start when power on
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# add current user 
+sudo groupadd docker
+sudo gpasswd -a ${USER} docker
+sudo systemctl restart docker
+```
+
+
+
+#### 国内VPS版
+
+```sh
+#!/bin/bash
+# 移除掉旧的版本
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine
+
+# 删除所有旧的数据
+sudo rm -rf /var/lib/docker
+
+#  安装依赖包
+sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+
+# 添加源，使用了阿里云镜像
+sudo yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+# 配置缓存
+sudo yum makecache fast
+
+# 安装最新稳定版本的docker
+sudo yum install -y docker-ce
+
+# 配置镜像加速器/阿里云加速
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["http://hub-mirror.c.163.com"]
+}
+EOF
+
+# 启动docker引擎并设置开机启动
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# 配置当前用户对docker的执行权限
+sudo groupadd docker
+sudo gpasswd -a ${USER} docker
+sudo systemctl restart docker
+```
+
+**注意**：国内访问docker太慢，一般会配置加速器，此处配置的加速器是163的加速器：`http://hub-mirror.c.163.com`，也可以配置[阿里云的加速器](https://link.zhihu.com/?target=https%3A//blog.csdn.net/kozazyh/article/details/79511723)。
+
+
+
+#### 配置阿里云docker加速
+
+登录阿里云管理控制台 -> 容器镜像服务 -> 镜像加速器
+
+获取到你的专属加速地址，填写到上面的`registry-mirrors`字段
+
+
+
+## 添加用户
+
+### 添加普通用户
+
+#### 新建用户
+
+需要在**root**用户下执行
+
+```shell
+# 新建testuser 用户
+adduser testuser
+# 给testuser 用户设置密码
+passwd testuser
+```
+
+#### 建立工作组
+
+```shell
+# 新建test工作组
+groupadd testgroup
+```
+
+#### 新建用户同时增加工作组
+
+```shell
+# 新建testuser用户并增加到testgroup工作组
+useradd -g testgroup testuser
+
+# 注：：-g 所属组 -d 家目录 -s 所用的shell
+```
+
+#### 给已有用户增加工作组
+
+```sh
+usermod -G groupname username
+```
+
+#### 临时关闭用户
+
+在/etc/shadow文件中属于该用户的行的第二个字段（密码）前面加上`*`就可以了。想恢复该用户，去掉`*`即可
+
+```shell
+# 或者使用如下命令关闭用户账号：
+passwd testuser –l
+# 重新释放：
+passwd testuser –u
+```
+
+#### 删除用户
+
+```shell
+userdel testuser
+groupdel testgroup
+# 强制删除该用户的主目录和主目录下的所有文件和子目录
+usermod –G testgroup testuser
+```
+
+#### 显示用户信息
+
+```shell
+id user
+```
+
+
+
+```shell
+# 用户列表文件
+/etc/passwd
+# 用户组列表文件
+/etc/group
+# 查看系统中有哪些用户
+cut -d : -f 1 /etc/passwd
+# 查看可以登录系统的用户
+cat /etc/passwd | grep -v /sbin/nologin | cut -d : -f 1
+
+# 查看用户操作
+# 查看某一用户
+w user
+# 查看登录用户
+who
+# 查看用户登录历史记录
+last
+```
+
+
+
+### 添加用户并替换掉root
+
+#### 添加用户
+
+```shell
+# 添加用户
+adduser user
+# 设置密码
+passwd user
+```
+
+#### 给用户root权限，并禁止root登录
+
+```shell
+# 修改权限，修改文件
+chmod +w /etc/sudoers
+vim /etc/sudoers
+
+# 修改内容如下
+## Allow root to run any commands anywhere
+root ALL=(ALL)       ALL
+user ALL=(ALL)       ALL （添加这一行）
+
+# 恢复只读权限
+chmod -w /etc/sudoers
+
+# 禁止root登录
+# 修改权限，编辑文件
+chmod 777 /etc/ssh/sshd_config
+vim /etc/ssh/sshd_config
+# 找到PermitRootLogin yes一行 将yes修改为no
+PermitRootLogin no
+
+# 保存退出，修改权限为只读
+:wq
+chmod 444 /etc/ssh/sshd_config
+
+# 刷新权限
+systemctl restart sshd
+# 此时root用户已经无法登录
+```
+
