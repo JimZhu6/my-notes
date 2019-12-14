@@ -1,4 +1,3 @@
-> 记录在window系统配置环境时的笔记
 
 ## wampserver window安装VC依赖
 
