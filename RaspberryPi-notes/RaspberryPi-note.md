@@ -1,6 +1,6 @@
 # 树莓派笔记
 
-> 本文部分节选自：[我的世界中文论坛-在树莓派下Minecraft服务器搭建教程](https://www.mcbbs.net/thread-579651-1-1.html)、
+> 本文部分节选自：[我的世界中文论坛-在树莓派下Minecraft服务器搭建教程](https://www.mcbbs.net/thread-579651-1-1.html)、[用树莓派构建一台服务器，永久运行网站](https://www.jianshu.com/p/7fbf455f3d41)
 
 > 相关网站:[树莓派实验室](http://shumeipai.nxez.com/)
 
@@ -63,4 +63,130 @@ vncserver :1      # 这里冒号后面的数字可以修改，为你通过VNC来
 > 如果你需要接入摄像头，则**至少**要为要为GPU分配128MB显存
 
 设置完成后重启生效。
+
+
+
+### 使用Advanced IP Scanner获取树莓派ip
+
+前往[Advanced IP Scanner](https://www.advanced-ip-scanner.com/cn/)下载并安装，安装完成后打开软件，使用软件扫描所有局域网内的设备，这个软件的优点在于：能扫描出网络设备的生产商。找到生产商是“Raspberry Pi Foundation”的机器就是树莓派。
+
+
+
+## 安装网站服务
+
+### 安装nginx
+
+如果镜像里默认安装了apache，则可能需要先卸载
+
+```sh
+sudo apt-get remove --purge apache* -y
+sudo apt-get autoremove --purge -y
+```
+
+
+
+```sh
+# 安装
+sudo apt-get install nginx
+# 给网页文件夹添加权限
+sudo chmod -R 777 /var/www/html
+# 启动
+sudo /etc/init.d/nginx start
+# 重启
+sudo /etc/init.d/nginx restart
+# 停止
+sudo /etc/init.d/nginx stop
+```
+
+
+
+### 安装MySql
+
+```sh
+sudo apt-get install mysql-server mysql-client
+```
+
+安装过程中会弹出界面让你输入root的密码，输入两次相同的就可以了。
+
+等待安装完成后，即可进入MySql测试是否正常运行
+
+```sh
+mysql -u root -p   # 使用账号'root'登入MySQL
+
+\q   # 退出
+```
+
+至此，MySql已经安装完成了。
+
+如果你还想让你的数据库解除本地访问的限制，你还需要这样做：
+
+```sh
+sudo nano /etc/mysql/my.cnf
+```
+
+  使用Ctrl+W组合键来打开搜索栏，输入'bind-address'来定位到对应的一行，在该行前加上'#'来将整行代码注释掉，Ctrl+O保存，Ctrl+X退出。
+
+
+
+### 安装PHP7
+
+```sh
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:ondrej/php # 安装php7的ppa源
+sudo apt-get update
+sudo apt-get install php7.0 php7.0-fpm php7.0-mysql php7.0-common
+```
+
+最后一行安装了PHP7.0主体，与Nginx对接的php7.0-fpm插件，与mysql对接的php7.0-mysql插件，常用函数工具php7.0-common插件。
+
+
+
+### 重启服务
+
+```sh
+sudo /etc/init.d/nginx restart
+sudo /etc/init.d/php7-fpm restart
+service mysql restart
+```
+
+
+
+
+
+## 其他优化设置
+
+### 开机自启ssh
+
+方法一：
+
+```sh
+sudo raspi-config
+```
+
+进入选择找到`interfacing option`选择，然后找到ssh，按回车使能enable就可以了
+
+方法二：
+
+在终端命令行中启动SSH服务后，如果系统重启或关机后启动，SSH服务默认是关闭的，依然需要手动启动，为了方便可以设置SSH服务开机自动启动，打开`/etc/rc.local`文件，在语句exit 0之前加入：
+ `/etc/init.d/ssh start`
+
+
+
+### 升级系统
+
+```sh
+sudo apt-get update
+```
+
+
+
+### 安装中文字体
+
+```sh
+sudo apt-get install ttf-wqy-zenhei     # 安装文泉驿的正黑体
+```
+
+安装完成后，可在设置面板设置为中文界面了
+
+
 
