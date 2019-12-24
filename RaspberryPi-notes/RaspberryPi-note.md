@@ -172,6 +172,36 @@ sudo raspi-config
 
 
 
+### 修改源
+
+#### 修改sources.list文件
+
+```sh
+sudo nano /etc/apt/sources.list 
+# 注释其他内容，选择一项添加:
+# 阿里云 要装MYSql必须只能用下面的源
+deb http://mirrors.aliyun.com/raspbian/raspbian/ wheezy main non-free contrib
+deb-src http://mirrors.aliyun.com/raspbian/raspbian/ wheezy main non-free contrib
+
+# 清华
+deb http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ wheezy main contrib non-free rpi 
+deb-src http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ wheezy main contrib non-free rpi 
+
+# 东软
+deb http://mirrors.neusoft.edu.cn/raspbian/raspbian/ wheezy main contrib non-free rpi 
+deb-src http://mirrors.neusoft.edu.cn/raspbian/raspbian/ wheezy main contrib non-free rpi 
+
+# 中科大
+deb http://mirrors.ustc.edu.cn/raspbian/raspbian/ wheezy main contrib non-free rpi 
+deb-src http://mirrors.ustc.edu.cn/raspbian/raspbian/ wheezy main contrib non-free rpi
+
+
+# 最后更新软件
+sudo apt-get update && apt-get upgrade -y       #更新系统软件 并 比较索引清单更新依赖关系
+```
+
+
+
 ### 升级系统
 
 ```sh
