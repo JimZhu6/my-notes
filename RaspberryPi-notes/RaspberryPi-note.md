@@ -24,6 +24,8 @@
 
 ### 通过VNCviewer连接树莓派
 
+#### 方法一：
+
 在使用ssh的方式连接到树莓派之后,安装VNC服务端：
 
 ```sh
@@ -42,27 +44,15 @@ vncserver :1      # 这里冒号后面的数字可以修改，为你通过VNC来
 
 这时在windows端打开[VNCviewer](https://www.realvnc.com/en/connect/download/viewer/)，输入ip和端口后即可连接到树莓派的图形化界面。
 
-这时推荐做以下设置：
+#### 方法二：
 
-![进入设置菜单](./img/sp1.jpg)
+在终端输入以下命令进入配置界面。
 
-  打开左上角的`Menu`一栏，选择其中的`Preferences`一栏，再选择`Raspberry Pi Configuration`一栏，出现系统设置界面。
+```sh
+sudo raspi-config
+```
 
-![设置菜单](./img/sp2.jpg)
-
-- 点击`Expand Filesystem`，扩容SD卡至卡原本的大小
-- 点击`Change Password`修改登录密码
-- 更改菜单至`Performance`，将`Overclock`（超频）和`GPU Memory`（显存分配）设置改为下图：
-
-![设置超频](./img/sp3.jpg)
-
-> 关于显存分配，这里有几个可选值：16/32/64/128/256
->
-> 如果你将你的树莓派用作文件服务器或Web服务器，不需要使用视频输出，你可以减少分配给GPU的内存数量（最少为16MB）
-> 如果你用它来浏览网页，看视频甚至运行3D游戏，那么你应该为GPU分配较大的内存，从而提高GPU性能，使其更好地渲染3D游戏画面
-> 如果你需要接入摄像头，则**至少**要为要为GPU分配128MB显存
-
-设置完成后重启生效。
+依次操作：Interfacing Options -> VNC -> Yes。之后系统会提示你是否要安装 VNC 服务，输入 y 之后回车，等待系统自动下载安装完成，一切顺利的话 VNC 服务就启动了！
 
 
 
@@ -154,6 +144,32 @@ service mysql restart
 
 
 ## 其他优化设置
+
+### 第一次进入系统应该做的设置
+
+推荐做以下设置：
+
+![进入设置菜单](./img/sp1.jpg)
+
+  打开左上角的`Menu`一栏，选择其中的`Preferences`一栏，再选择`Raspberry Pi Configuration`一栏，出现系统设置界面。
+
+![设置菜单](./img/sp2.jpg)
+
+- 点击`Expand Filesystem`，扩容SD卡至卡原本的大小
+- 点击`Change Password`修改登录密码
+- 更改菜单至`Performance`，将`Overclock`（超频）和`GPU Memory`（显存分配）设置改为下图：
+
+![设置超频](./img/sp3.jpg)
+
+> 关于显存分配，这里有几个可选值：16/32/64/128/256
+>
+> 如果你将你的树莓派用作文件服务器或Web服务器，不需要使用视频输出，你可以减少分配给GPU的内存数量（最少为16MB）
+> 如果你用它来浏览网页，看视频甚至运行3D游戏，那么你应该为GPU分配较大的内存，从而提高GPU性能，使其更好地渲染3D游戏画面
+> 如果你需要接入摄像头，则**至少**要为要为GPU分配128MB显存
+
+设置完成后重启生效。
+
+
 
 ### 开机自启ssh
 
