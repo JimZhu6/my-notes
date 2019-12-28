@@ -585,3 +585,20 @@ axios({
 axios.post('/api/lockServer/search',"userName='admin'&pwd='admin'");
 ```
 
+
+
+### 修改开发/线上环境
+
+根据当前环境是“开发环境”或是“线上环境”以处理程序异常时是否抛出错误信息。
+
+修改`.htaccess`文件
+
+```php
+# 添加这一行代表处于开发环境
+SetEnv CI_ENV development
+
+# 添加这一行代表处于线上环境，不显示错误信息
+SetEnv CI_ENV production
+```
+
+具体错误信息处理，可在`index.php`文件头部进行处理
