@@ -85,5 +85,5 @@
 ## [RaspberryPi-notes](RaspberryPi-notes/)
 
 - [RaspberryPi-note](RaspberryPi-notes/RaspberryPi-note.md)
-- [其他玩法](RaspberryPi-notes/play-note.md)
+- [其他玩法](RaspberryPi-notes/Gadgets-note.md)
 
