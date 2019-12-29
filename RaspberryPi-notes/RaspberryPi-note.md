@@ -236,3 +236,10 @@ sudo apt-get install ttf-wqy-zenhei     # 安装文泉驿的正黑体
 
 
 
+### 查看CPU温度
+
+```sh
+/opt/vc/bin/vcgencmd measure_temp
+```
+
+
