@@ -10,6 +10,8 @@
 
 从树莓派官网处[下载官方镜像](https://www.raspberrypi.org/downloads/raspbian/)。系统需要写进SD卡，需要先用到[SDFomatter](https://www.sdcard.org/chs/downloads/formatter/index.html)格式化SD卡，然后使用[Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/)对SD卡进行写盘。等待写盘完成后，需要在电脑上找到一个刚刚烧录好的磁盘分区，名字叫`boot`，在里面创建一个文件名为`SSH`的文件（**无后缀名**），这时就可以将SD卡插回树莓派了。
 
+> 也可以使用[balenaEtcher](https://www.balena.io/etcher/)直接对sd卡烧录镜像
+
 为树莓派接上MicroUSB电源，如果正常的话红灯将会是常亮的，绿灯将会是闪烁的，Raspbian操作系统就成功地搭载到你的树莓派了！（如果红灯会闪烁的话那么你的电源就是不合格的了）
 
 
@@ -141,6 +143,26 @@ service mysql restart
 
 
 
+## 备份
+
+> 本段来源：[树莓派学习笔记 篇四：树莓派4B 的系统备份方法大全（全卡+压缩备份）](https://post.smzdm.com/p/apzkgne7/)
+
+### 全卡备份
+
+在硬盘上创建一个img 后缀的空文件，打开 [Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/)，选择刚刚创建的空img 文件和 SD 卡盘符，点击 read 即可。
+
+等待几分钟后就得到了备份的 img 文件，用 Win32DiskImager 来制作镜像时因为无法读取到 Linux 分区，所以是全卡备份，该方法的缺点是备份文件会和 SD 卡的容量一致，而且在还原的时候必须使用比镜像更大容量的 SD 卡。
+
+### 压缩备份
+
+[PiShrink](https://github.com/Drewsif/PiShrink) 是 Github 上开源的树莓派压缩工具，通过裁剪上面用 Win32DiskImager 或者 dd 命令全卡备份的镜像，去掉没有内容的分区，从而减小备份镜像的大小。
+
+先将全卡备份的镜像文件复制到 Linux 中，打开终端执行wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh 下载 sh 脚本文件，默认存到`/home/user`目录下，将其拷贝到镜像所在文件夹下。执行`chmod +x pishrink.sh` 增加执行权限，然后执行`sudo bash pishrink.sh rpi-back.img` 即可。
+
+如果你的 linux 系统是语言是中文，可能会报错，需要设置英文运行`sudo pishrink.sh raspberrypi.img`
+
+设置语言需要执行`sudo raspi-config`，选择`Internationalisation Options`->`Change Locale`，选择`en_US.UTF-8 UTF-8`
+
 
 
 ## 其他优化设置
@@ -161,7 +183,7 @@ service mysql restart
 
 ![设置超频](./img/sp3.jpg)
 
-> 关于显存分配，这里有几个可选值：16/32/64/128/256
+> 关于显存分配，这里有几个可选值：16/32/64/128/256/512
 >
 > 如果你将你的树莓派用作文件服务器或Web服务器，不需要使用视频输出，你可以减少分配给GPU的内存数量（最少为16MB）
 > 如果你用它来浏览网页，看视频甚至运行3D游戏，那么你应该为GPU分配较大的内存，从而提高GPU性能，使其更好地渲染3D游戏画面
