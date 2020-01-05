@@ -149,7 +149,7 @@ service mysql restart
 
 ### 全卡备份
 
-在硬盘上创建一个img 后缀的空文件，打开 [Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/)，选择刚刚创建的空img 文件和 SD 卡盘符，点击 read 即可。
+在硬盘上创建一个img 后缀的空文件，打开 [Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/)，选择刚刚创建的空img 文件和 SD 卡盘符（选择boot分区的盘），点击 read 即可。
 
 等待几分钟后就得到了备份的 img 文件，用 Win32DiskImager 来制作镜像时因为无法读取到 Linux 分区，所以是全卡备份，该方法的缺点是备份文件会和 SD 卡的容量一致，而且在还原的时候必须使用比镜像更大容量的 SD 卡。
 
@@ -157,9 +157,17 @@ service mysql restart
 
 [PiShrink](https://github.com/Drewsif/PiShrink) 是 Github 上开源的树莓派压缩工具，通过裁剪上面用 Win32DiskImager 或者 dd 命令全卡备份的镜像，去掉没有内容的分区，从而减小备份镜像的大小。
 
-先将全卡备份的镜像文件复制到 Linux 中，打开终端执行wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh 下载 sh 脚本文件，默认存到`/home/user`目录下，将其拷贝到镜像所在文件夹下。执行`chmod +x pishrink.sh` 增加执行权限，然后执行`sudo bash pishrink.sh rpi-back.img` 即可。
+先将全卡备份的镜像文件复制到 Linux 中，打开终端运行：
 
-如果你的 linux 系统是语言是中文，可能会报错，需要设置英文运行`sudo pishrink.sh raspberrypi.img`
+```sh
+wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh
+chmod +x pishrink.sh
+sudo mv pishrink.sh /usr/local/bin
+```
+
+然后执行`sudo pishrink.sh pi.img` 即可。
+
+如果你的 linux 系统是语言是中文，可能会报错，需要设置英文运行`sudo pishrink.sh pi.img`
 
 设置语言需要执行`sudo raspi-config`，选择`Internationalisation Options`->`Change Locale`，选择`en_US.UTF-8 UTF-8`
 
