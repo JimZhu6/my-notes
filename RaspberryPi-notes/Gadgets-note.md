@@ -70,3 +70,83 @@ remote_port = 6000
 
 双端启动完成后，可以在其他设备通过`[server_addr]:[remote_port]`连接树莓派
 
+
+
+
+
+## 使用systemctl设置开机自启命令
+
+### 配置文件
+
+前往systemctl任务目录里创建新任务文件，这里以frp作为例子
+
+```sh
+cd /lib/systemd/system
+sudo nano frp.service
+```
+
+frp.service:
+
+```ini
+[Unit]
+Description=frp
+ 
+[Service]
+User=pi
+Type=simple
+ExecStartPre=/bin/sleep 10
+ExecStart=/home/pi/Desktop/frp/frpc -c /home/pi/Desktop/frp/frpc.ini
+ 
+[Install]
+WantedBy=multi-user.target
+```
+
+
+
+### 常用命令
+
+- 查看启动日志
+  ```sh
+   journalctl -f
+   # or
+   journalctl -xe
+  ```
+
+- 设置开机自启动
+
+  ```sh
+  systemctl enable frp.service
+  ```
+
+- 启动frp服务
+
+  ```sh
+  systemctl start frp.service
+  ```
+
+- 停止开机自启动
+
+  ```sh
+  systemctl disable frp.service
+  ```
+
+- 查看服务当前状态
+
+  ```sh
+  systemctl status frp.service
+  ```
+
+- 重新启动服务
+
+  ```sh
+  systemctl restart frp.service
+  ```
+
+- 查看所有已启动的服务
+
+  ```sh
+  systemctl list-units --type=service
+  ```
+
+  
+
