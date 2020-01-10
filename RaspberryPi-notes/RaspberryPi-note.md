@@ -273,3 +273,17 @@ sudo apt-get install ttf-wqy-zenhei     # 安装文泉驿的正黑体
 ```
 
 
+
+### 升级npm
+
+树莓派默认安装的npm版本是5.8.0，尝试使用`npm updata`升级但是失败了
+
+根据GitHub上其他用户给出的[解决方法](https://github.com/nodejs/help/issues/1877#issuecomment-530152567)，执行下面的命令可以执行升级命令
+
+```sh
+curl https://www.npmjs.com/install.sh | sudo sh
+```
+
+这时候会在当前目录生成一个`node_modules`和`package.json`，删除掉即可
+
+用这个方法能升级npm版本到6.13.6
