@@ -95,10 +95,25 @@ sudo /etc/init.d/nginx stop
 ### 安装MySql
 
 ```sh
-sudo apt-get install mysql-server mysql-client
+sudo apt install mariadb-server
+sudo mysql_secure_installation
 ```
 
-安装过程中会弹出界面让你输入root的密码，输入两次相同的就可以了。
+此时系统会询问你：`Enter current password for root (enter for none):` ,按回车（enter）键，因为第一次登陆是没有密码的。
+
+然后会询问你： `Set root password?` —— 按 y ，进行root帐号的密码设置
+
+此时，会提示 `New password` ,在此输入你的MySQL密码，请牢记这个密码，输入完成按回车，会提示`re-enter new password`此时再重复输入密码，回车即可。
+
+然后，询问你 `Remove anonymous users` ，按 y 。
+
+然后，询问你 `Disallow root login remotely` ，按 y 。
+
+然后，询问你 `Remove test database and access to it` ，按 y 。
+
+然后，询问你 `Reload privilege tables now` ，按 y 。
+
+最后，您将看到消息 `All done!` 和 `Thanks for using MariaDB!` 。表示已经设置完成了。
 
 等待安装完成后，即可进入MySql测试是否正常运行
 
@@ -117,6 +132,36 @@ sudo nano /etc/mysql/my.cnf
 ```
 
   使用Ctrl+W组合键来打开搜索栏，输入'bind-address'来定位到对应的一行，在该行前加上'#'来将整行代码注释掉，Ctrl+O保存，Ctrl+X退出。
+
+
+
+### 安装PhpMyAdmin
+
+要在php中使用MySQL，则需要安装php-mysql
+
+```bash
+sudo apt install php-mysql
+```
+
+安装完毕后，在PhpMyAdmin的官网下载最新版本:
+https://www.phpmyadmin.net/
+
+```bash
+cd ~
+wget https://files.phpmyadmin.net/phpMyAdmin/4.9.0.1/phpMyAdmin-4.9.0.1-all-languages.zip
+```
+
+然后，使用unzip命令解压，
+再使用mv命令把phpMyAdminxxxxxxxx的文件夹移动到Nginx的网站目录下，
+（这里的xxxxxxxx，是你当前的下载的版本信息）
+
+> Nginx的默认网站目录是：/var/www/html/
+
+这就不详细列出操作命令，
+最后打开浏览器输入http://localhost/phpMyAdminxxxxxxxxxxx ,
+（或者输入http://’yourIP’/phpMyAdmin-4.9.1/index.php）
+
+即可打开PhpMyAdmin的数据库管理登陆页面。
 
 
 
