@@ -252,6 +252,7 @@ sudo apt-get update && apt-get upgrade -y       #更新系统软件 并 比较�
 
 ```sh
 sudo apt-get update
+sudo apt-get dist-upgrade
 ```
 
 
