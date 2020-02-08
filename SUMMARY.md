@@ -93,3 +93,8 @@
 - [RaspberryPi-note](RaspberryPi-notes/RaspberryPi-note.md)
 - [其他玩法](RaspberryPi-notes/Gadgets-note.md)
 
+
+
+## [Phone-notes](Phone-notes/)
+
+- [ZenFone6-note](Phone-notes/ZenFone6.md)
