@@ -2,6 +2,8 @@
 
 ## 使用浏览器书签执行js代码
 
+> 小工具：[Bookmarklet Crunchinator](http://ted.mielczarek.org/code/mozilla/bookmarklet.html)
+
 新建后缀为`url`的文件，这是一个书签文件。使用vscode或其他文本编辑器打开。书签文件的简单模板如下：
 
 ```
