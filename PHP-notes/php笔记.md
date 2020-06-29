@@ -1248,9 +1248,24 @@ fclose($myFile);
 
 #### 跨域处理
 
+需要在后端接口入口页面设置允许跨域
+
 ```php
 header('Access-Control-Allow-Origin:*');
 header('Access-Control-Allow-Headers:content-type,token,id');
 header("Access-Control-Request-Headers: Origin, X-Requested-With, content-Type, Accept, Authorization");
+```
+
+如果遇到set-cookies无法存储的问题时，需要做如下设置
+
+```php
+// 后端设置
+header('Access-Control-Allow-Credentials:true');
+// 设置了这个之后，Access-Control-Allow-Origin需要设置具体域名，不能使用*
+```
+
+```js
+// 前端在请求头中设置
+withCredentials:true
 ```
 
