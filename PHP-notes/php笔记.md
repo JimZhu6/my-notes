@@ -1246,3 +1246,11 @@ fclose($myFile);
 
 
 
+#### 跨域处理
+
+```php
+header('Access-Control-Allow-Origin:*');
+header('Access-Control-Allow-Headers:content-type,token,id');
+header("Access-Control-Request-Headers: Origin, X-Requested-With, content-Type, Accept, Authorization");
+```
+
