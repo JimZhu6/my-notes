@@ -602,3 +602,15 @@ SetEnv CI_ENV production
 ```
 
 具体错误信息处理，可在`index.php`文件头部进行处理
+
+### 部署线上环境后提示system文件指向错误
+
+在IIS服务器上遇到过这个问题，部署完成后提示：Your system folder path does not appear to be set correctly. Please open the following file and correct this: index.php
+
+可将CI根目录的index.php文件的两个路径指向更改为：
+
+```php
+$system_path = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'system';
+$application_folder = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'application';
+```
+
