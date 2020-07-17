@@ -8,7 +8,9 @@
 
 ## 安装Raspbian操作系统
 
-从树莓派官网处[下载官方镜像](https://www.raspberrypi.org/downloads/raspbian/)。系统需要写进SD卡，需要先用到[SDFomatter](https://www.sdcard.org/chs/downloads/formatter/index.html)格式化SD卡，然后使用[Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/)对SD卡进行写盘。等待写盘完成后，需要在电脑上找到一个刚刚烧录好的磁盘分区，名字叫`boot`，在里面创建一个文件名为`SSH`的文件（**无后缀名**），这时就可以将SD卡插回树莓派了。
+从树莓派官网处[下载官方镜像](https://www.raspberrypi.org/downloads/raspbian/)。系统需要写进SD卡，需要先用到[SDFomatter](https://www.sdcard.org/chs/downloads/formatter/index.html)格式化SD卡，然后使用[Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/)对SD卡进行写盘。
+
+等待写盘完成后，需要在电脑上找到一个刚刚烧录好的磁盘分区，名字叫`boot`，在里面创建一个文件名为`SSH`的文件（**无后缀名**），这时就可以将SD卡插回树莓派了。
 
 > 也可以使用[balenaEtcher](https://www.balena.io/etcher/)直接对sd卡烧录镜像
 
@@ -61,6 +63,66 @@ sudo raspi-config
 ### 使用Advanced IP Scanner获取树莓派ip
 
 前往[Advanced IP Scanner](https://www.advanced-ip-scanner.com/cn/)下载并安装，安装完成后打开软件，使用软件扫描所有局域网内的设备，这个软件的优点在于：能扫描出网络设备的生产商。找到生产商是“Raspberry Pi Foundation”的机器就是树莓派。
+
+
+
+### 通过网线连接windows笔记本电脑
+
+网线连接已开机的树莓派，这时候前往“网络连接”中可以看到“以太网”已连接的状态，右键点击“属性”，查看“IPv4”属性，获取到ip网关（一般为`192.168.137.1`）。
+
+#### 方法1：
+
+打开终端，输入`arp -a`。在输出的内容中找到`192.168.137.1`这个IP，该条目下的第一行`192.168.137.27`即为树莓派的IP地址。
+
+#### 方法2：
+
+使用[Advanced IP Scanner](https://www.advanced-ip-scanner.com/cn/)扫描，扫描框中输入`192.168.137.0-255`，然后点击按钮开始扫描，扫描结果中找到含有”raspberrypi”字段的一行，对应的IP即为树莓派的IP。
+
+### 设置wifi
+
+编辑配置文件`sudo vi /etc/wpa_supplicant/wpa_supplicant.conf`
+
+格式如下：
+
+```conf
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+#ap_scan=1
+
+network={
+       ssid="ssid"
+       scan_ssid=1
+       psk="密码"
+       priority=5
+}
+network={
+       ssid="ssid"
+       psk="密码"
+       priority=1
+}
+```
+
+**ap_scan:**1是默认值，因此我注掉了
+
+- **1：**这个模式下总是先连接可见的WiFi，如果扫描完所有可见的网络之后都没有连接上，则开始连接隐藏WiFi。
+- **2：**会按照network定义的顺序连接WiFi网络，遇到隐藏的将立刻开始连接，因此在这个模式下连接顺序不受priority影响
+
+**ctrl_interface:**这个文件夹里面存的是一个当前使用的interface的socket文件，可以供其他程序使用读取WiFi状态信息
+
+**network：**是一个连接一个WiFi网络的配置，可以有多个，wpa_supplicant会按照priority指定的优先级（数字越大越先连接）来连接，当然，在这个列表里面隐藏WiFi不受priority的影响，隐藏WiFi总是在可见WiFi不能连接时才开始连接。
+
+- **ssid**:网络的ssid
+- **psk**:密码
+- **priority**:连接优先级，越大越优先
+- **scan_ssid**:连接隐藏WiFi时需要指定该值为1
+
+修改完成后，使用以下命令重启网络
+
+```ruby
+pi@raspberrypi:~$ sudo systemctl restart networking  #重启网卡
+pi@raspberrypi:~$ sudo ifdown wlan0   
+pi@raspberrypi:~$ sudo ifup wlan0     
+pi@raspberrypi:~$ wpa_cli status      #查看连接状态
+```
 
 
 
