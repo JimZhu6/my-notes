@@ -29,6 +29,7 @@
 - [ssh小记](VPS-notes/ssh小记.md)
 - [Ubuntu笔记](VPS-notes/Ubuntu笔记.md)
 - [vps安全相关](VPS-notes/vps安全相关.md)
+- [Google Drive笔记](VPS-notes/Google Drive笔记.md)
 
 
 
