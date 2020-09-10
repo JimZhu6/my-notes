@@ -20,6 +20,7 @@
 ## [VUE-notes](VUE-notes/)
 
 - [vue-note](VUE-notes/vue-note.md)
+- [vue3-note](VUE-notes/vue3-note.md)
 
 
 
