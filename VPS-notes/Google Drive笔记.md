@@ -28,7 +28,7 @@ Type of storage to configure.
 Enter a string value. Press Enter for the default ("").
 Choose a number from below, or type in your own value
 # ...
-12 / Google Drive
+13 / Google Drive
    \ "drive"
 # ...
 Storage> 13  # 选择13，Google Drive
@@ -110,7 +110,9 @@ d) Delete this remote
 y/e/d> y  # 设置完成
 ```
 
-### 挂载磁盘
+### Linux挂载磁盘相关
+
+#### 挂载磁盘
 
 设置完成后，新建一个你需要挂载的本地目录，这里以/home/gdrive为例
 
@@ -139,7 +141,7 @@ mkdir -p /root/gdrive
 
 此时，将文件复制进刚才创建的本地目录中，即可自动上传到Google Drive，Drive中的文件也将自动同步到挂载的磁盘中。
 
-### 卸载磁盘
+#### 卸载磁盘
 
 使用此命令即可卸载磁盘：
 
@@ -147,7 +149,7 @@ mkdir -p /root/gdrive
 fusermount -qzu LocalFolder
 ```
 
-### 配置开机自动挂载
+#### 配置开机自动挂载
 
 Rclone默认是不会开机自启并挂载的，我们需要自行设置
 
@@ -196,9 +198,74 @@ systemctl stop rclone
 systemctl status rclone
 ```
 
+### Windows挂载磁盘相关
+
+#### 挂载磁盘
+
+我这里假设我前面添加的名称为my_drive，想要挂载在本机的X:上，并设置缓存目录为F:\Temp（cache路径中请不要带有空格，默认缓存目录为C盘用户目录下， C:\Users\<Your user name>\AppData\Local\rclone）。那么运行以下命令执行挂载（整个my_drive根目录）操作，然后你就会看到一个可爱的X盘出现了~
+
+```sh
+rclone mount my_drive:/ x: --cache-dir F:\Temp --vfs-cache-mode writes
+```
+
+关于vfs-cache-mode项设置，还是建议看下官方的说明根据自己的需求和网络情况来进行选择 https://rclone.org/commands/rclone_mount/#file-caching 。这里只做简单说明：
+
+
+>off： In this mode the cache will read directly from the remote and write directly to the remote without caching anything on disk. （本地不做任何缓存，所有文件直接从云端获取并写入。建议网速特别好时（复制粘贴大文件时建议至少100M管以上速度）使用。
+>
+>minimal： This is very similar to “off” except that files opened for read AND write will be buffered to disks. This means that files opened for write will be a lot more compatible, but uses the minimal disk space. （和off类似，但是已经打开的文件会被缓存到本地。个人推荐，小文件基本够用，但是如果你的网络情况（梯子）不是特别好的话，用writes也行
+>
+>writes： In this mode files opened for read only are still read directly from the remote, write only and read/write files are buffered to disk first. （如果文件属性为只读则只从云端获取，不然先缓存在本地进行读写操作，随后被同步。个人推荐使用，但是在直接从本地复制文件到my_drive时还是看网络情况
+>
+>full：In this mode all reads and writes are buffered to and from disk. When a file is opened for read it will be downloaded in its entirety first. （所有的读写操作都会缓存到磁盘中。然后才会同步。不是很推荐。会导致所有文件均被缓存到本地。直到达到你缓存总额（—cache-total-chunk-size，默认大小10G）。但是你网速特别差时也可以使用。
+
+#### 后台运行与开机自启挂载
+
+上面的挂载操作在退出cmd后就自动结束了，所以我们需要让它后台运行。
+
+rclone虽然提供了--daemon参数来实行后台运行，但是该参数并不适合于[windows](https://www.zhiqiang.name/html/tag/windows/)环境中。会有如下提示：
+
+```sh
+rclone mount my_drive:/ x: --cache-dir F:\Temp --vfs-cache-mode writes --daemon
+2018/05/01 09:54:19 background mode not supported on windows platform
+```
+
+所以，我们需要另外想个办法让rclone能够后端运行以及开机自动挂载。
+
+在你之前解压的rclone目录下新建一个文本文件，填入以下内容，请注意修改倒数第二行的WS.Run中相关命令为你上步成功执行的命令，然后将该文件名改为rclone.vbs （后缀名为.vbs即可）
+
+```vb
+Option Explicit
+Dim WMIService, Process, Processes, Flag, WS
+Set WMIService = GetObject("winmgmts:{impersonationlevel=impersonate}!\\.\root\cimv2")
+Set Processes = WMIService.ExecQuery("select * from win32_process")
+Flag = true
+for each Process in Processes
+    if strcomp(Process.name, "rclone.exe") = 0 then
+        Flag = false
+        exit for
+    end if
+next
+Set WMIService = nothing
+if Flag then
+    Set WS = Wscript.CreateObject("Wscript.Shell")
+    WS.Run "rclone mount my_drive:/ x: --cache-dir F:\Temp --vfs-cache-mode writes", 0
+end if
+```
+
+完成后双击运行，你会看到X盘挂载成功。
+
+补充说明下，如果你看到显示的挂载空间其实是个人空间大小，请参阅此issue: The amount of disk space incorrent when mount Team Drives (gdrive) in Windows 10 · Issue #2288 · ncw/rclone 下载最新的rclone并安装。但超大文件仍建议使用rclone copy或者rclone sync进行复制或者同步操作，而不是直接使用挂载盘，以免卡挂载盘。
+
+**如果你需要中断这个挂载操作，请直接在任务管理器中kill掉rclone.exe进程即可。**
+
+然后将这个文件复制（或者剪贴）到开机项中C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp（Windows 10）即可实现开机自动挂载~
+
+
+
 ### 常用命令语法
 
-## rclone命令语法
+#### rclone命令语法
 
 ```shell
 # 本地到网盘
