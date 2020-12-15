@@ -8,6 +8,8 @@
 
 下载引擎包，执行引擎包内的`setup.py`按提示导入Ant、NDK、SDK。
 
+> 亦可直接安装可视化编辑器 [CocosCreator](https://www.cocos.com/creator/)
+
 
 
 ## 常用指令
@@ -41,3 +43,34 @@ cocos deploy -s <path to your project> -p <platform> -m <mode>
 ### 更多帮助
 
 运行 `cocos new --help`、`cocos compile --help`、`cocos deploy --help`等...可以查看更多帮助信息。
+
+
+
+## 工程文件
+
+### frameworks/
+
+包含 Cocos 两个引擎与编译工程文件夹（runtime-src）
+
+### index.html
+
+web 程序入口，定义画布。
+
+### main.js
+
+程序入口。
+
+### project.json
+
+主配置文件。当你创建了一个 js 文件时，需要在这里声明。
+
+### publish/
+
+项目编译后的文件。
+
+### src/resource.js
+
+定义静态资源全局变量，在`main.js`用作预加载。
+
+
+
