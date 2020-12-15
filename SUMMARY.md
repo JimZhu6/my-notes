@@ -101,3 +101,9 @@
 ## [Phone-notes](Phone-notes/)
 
 - [ZenFone6-note](Phone-notes/ZenFone6.md)
+
+
+
+## [Cocos-notes](Cocos-notes/)
+
+- [Cocos2d-js-note](Cocos-notes/Cocos2d-js-note.md)
