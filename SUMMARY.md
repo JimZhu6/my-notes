@@ -8,6 +8,7 @@
 
 - [JS-note](JS-notes/JS-note.md)
 - [[转载]JSON.stringify的小技巧](JS-notes/[R]JSON.stringify.md)
+- [JS代码片段](JS-notes/JS-code.md)
 
 
 
