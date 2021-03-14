@@ -249,7 +249,7 @@ module.exports = {
 npm install @babel/preset-env -D
 ```
 
-### 2. 编辑`babel.config.js`
+### 2. 编辑`.babelrc`
 
 ```js
 {  
