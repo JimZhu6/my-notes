@@ -238,3 +238,30 @@ module.exports = {
 
 1. 如果提示 `Can't find Chrome` ，需要配置 `runtimeExecutable` 为浏览器可执行文件路径。
 2. 如果浏览器白屏并且 `vscode` 提示 `Cannot connect to the target`，则需配置 `userDataDir` 为 `true`.
+
+
+
+## vue2 Element-UI 按需引入
+
+### 1. 安装插件
+
+```shell
+npm install @babel/preset-env -D
+```
+
+### 2. 编辑`babel.config.js`
+
+```js
+{  
+    "presets": [["@babel/preset-env", { "modules": false }]],
+    "plugins": [
+      [
+        "component",
+        {
+          "libraryName": "element-ui",
+          "styleLibraryName": "theme-chalk"
+        }
+      ]
+    ]
+}
+```
