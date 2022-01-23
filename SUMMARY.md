@@ -96,6 +96,7 @@
 - [RaspberryPi-note](RaspberryPi-notes/RaspberryPi-note.md)
 - [其他玩法](RaspberryPi-notes/Gadgets-note.md)
 - [Openwrt](RaspberryPi-notes/Openwrt-note.md)
+- [Ubuntu安装指南](RaspberryPi-notes/Ubuntu-RaspberryPi.md)
 
 
 
