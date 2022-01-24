@@ -99,3 +99,78 @@
 4. 通过 SSH 访问内网机器，假设用户名为 test：
 
    `ssh -oPort=6000 test@127.0.0.1`
+   
+   
+   
+### 开机自启并在后台运行
+
+在 /usr/lib/systemd/system 下面新建一个文件frps.service，文件内容如下：
+
+```bash
+[Unit]
+Description=frps daemon
+
+[Service]
+Type=simple
+#此处把/root/frp_linux_arm64替换成 你的frps的实际安装目录
+ExecStart=/home/ubuntu/frp/frpc -c /home/ubuntu/frp/frpc.ini
+
+[Install]
+WantedBy=multi-user.target
+```
+
+- 启动frp `sudo systemctl start frpc`
+- 打开自启动 `sudo systemctl enable frpc`
+- 重启应用 `sudo systemctl restart frpc`
+- 停止应用 `sudo systemctl stop frpc`
+- 查看日志 `sudo systemctl status frpc`
+
+
+
+## 安装Docker
+
+输入下面命令进行安装
+
+```bash
+sudo apt install docker.io
+```
+
+查看版本
+
+```bash
+docker version
+```
+
+启动docker server，需要切换为root用户启动
+
+```bash
+service docker start
+```
+
+设置开机自启
+
+```bash
+systemctl start docker
+systemctl enable docker
+systemctl start docker.service
+systemctl enable docker.service
+```
+
+修改源，修改后需要重启服务
+
+```bash
+# vi /etc/docker/daemon.json
+{
+    "registry-mirrors": ["http://hub-mirror.c.163.com"]
+}
+```
+
+测试docker
+
+```bash
+docker pull hello-world
+docker run hello-world
+```
+
+
+
