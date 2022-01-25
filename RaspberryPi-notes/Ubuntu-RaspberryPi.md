@@ -174,3 +174,53 @@ docker run hello-world
 
 
 
+## 安装docker图形化工具portainer
+
+### 安装
+
+具体安装方法官网就有[介绍](https://www.portainer.io/installation/)。推荐安装[docker](https://documentation.portainer.io/v2.0/deploy/ceinstalldocker/)版本，官网介绍基本就2条命令搞定（后面我根据自身需求修改）。
+
+```bash
+$ docker volume create portainer_data
+$ docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce
+```
+
+
+
+第1句是创建名为portainer_data的数据卷；
+
+第2句复杂点：
+
+> -d 后台运行容器
+> -p 8000:8000 -p 9000:9000 做了2个端口映射，将 portainer docker 内的端口8000和9000映射到宿主机的8000和9000端口
+> --name=portainer 为容器指定名称portainer
+> --restart=always 当 docker 重启时，容器能自动启动
+> -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data
+> 这里 -v 是路径地址映射，将容器内对应文件映射到宿主机，方便管理
+> portainer/portainer-ce这是镜像名称，旧的版本叫做portainer/portainer，应该是不用了
+
+这里本身我就比较奇怪为什么映射2个端口，简单查了一下9000是web管理端口，8000是代理接入端口，一般我们只需要页面管理，我选择只设置9000端口映射。注意-v /var/run/docker.sock:/var/run/docker.sock，这只在 Linux 环境下适用（windows是另外的地址），我的是 Ubuntu 也属于 Linux ，当然也是适用，请不要改动这个路径，它对应 docker 的管理路径，后面的路径 portainer_data，是前面创建的数据卷，可以改动设置到其他文件下，这样数据卷也就没有必要创建了，所以我们修改用一句代码搞定安装 portainer 。
+
+```bash
+docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /docker/portainer_data:/data portainer/portainer-ce
+```
+
+打开树莓派的ip地址，加端口号9000即可打开管理页面
+
+### 更新
+
+先停止并移除当前版本
+
+```bash
+$ docker stop portainer
+$ docker rm portainer
+```
+
+
+
+再拉取新版镜像，新建容器。
+
+```bash
+docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /docker/portainer_data:/data portainer/portainer-ce
+```
+
