@@ -224,3 +224,83 @@ $ docker rm portainer
 docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /docker/portainer_data:/data portainer/portainer-ce
 ```
 
+### 
+
+## 挂载U盘
+
+首先把U盘插入树莓派，然后查看一下是否有被识别到。
+
+ ```bash
+ sudo fdisk -l
+ ```
+
+ 这里好像一定要是`sudo`才行，如果不获取权限好像什么都不显示。其中/dev/mmc表示的是TF卡，容量是8G，而/dev/sda/表示的是我们的第一个硬件（U盘），容量也是8G，只有一个分区。
+
+查看了U盘已经正确被识别，现在准备进行挂载。
+ 新建一个目录
+
+ ```bash
+ sudo mkdir /mnt/sda
+ ```
+
+ 然后挂载设备
+
+ ```bash
+ sudo mount -o uid=pi,gid=pi /dev/sda /mnt/sda/
+ ```
+
+
+
+需要拔出U盘的时候，可以这样取消挂载
+
+ ```bash
+ sudo umount /mnt/sda
+ ```
+
+
+
+如果提示设备在忙，那么可以使用下面的方法尝试。
+ 问题现象：
+
+```bash
+#umount /dev/sda
+umount: /mnt/usb: device is busy
+```
+
+查找占用目录进程：
+
+
+
+```bash
+#lsof |grep /mnt/sda
+bash 1971 root cwd DIR 8,1 16384 1 /mnt/usb/
+bash 2342 root 3r DIR 8,1 16384 1 /mnt/usb/
+```
+
+杀掉进程：
+
+```bash
+#kill -9 1971
+#kill -9 2342
+```
+
+卸载：
+
+ ```bash
+ #umount /mnt/sda
+ ```
+
+
+
+### 格式化U盘
+
+首先执行`sudo fdisk -l`查看你的u盘的序号，通常是`/dev/sdb`之类的，U盘分区通常是`/dev/sdb1`
+
+对于u盘我们一般格式化为FAT格式或者FAT32格式，不过在linux下这些会都显示为FAT格式。我们只需要执行命令：
+ `sudo mkfs.vfat -F 32 /dev/sdb1`即可将u盘格式化为fat32格式。
+
+```bash
+sudo mkfs.ext4 /dev/sda1 # 格式化为ext4分区 
+sudo mkfs.ext3 /dev/sda1 # 格式化为ext3分区 
+sudo mkfs.ext2 /dev/sda1 #格式化为ext2分区 
+```
