@@ -304,3 +304,29 @@ sudo mkfs.ext4 /dev/sda1 # 格式化为ext4分区
 sudo mkfs.ext3 /dev/sda1 # 格式化为ext3分区 
 sudo mkfs.ext2 /dev/sda1 #格式化为ext2分区 
 ```
+
+
+
+## 部署photoprism
+
+首先要确保boot里的config文件中`arm_64bit=1`，然后拉取镜像
+
+```bash
+docker pull --platform=arm64 photoprism/photoprism:latest
+```
+
+启动命令
+
+```bash
+docker run -d \
+  --name photoprism \
+  --security-opt seccomp=unconfined \
+  --security-opt apparmor=unconfined \
+  -p 2342:2342 \
+  -e PHOTOPRISM_ADMIN_PASSWORD="insecure" \
+  -v /photoprism/storage \
+  -v ~/Pictures:/photoprism/originals \
+  photoprism/photoprism
+```
+
+[配置选项文档](https://docs.photoprism.app/getting-started/config-options/)
