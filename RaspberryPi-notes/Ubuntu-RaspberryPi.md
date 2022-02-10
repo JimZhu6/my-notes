@@ -322,10 +322,11 @@ docker run -d \
   --name photoprism \
   --security-opt seccomp=unconfined \
   --security-opt apparmor=unconfined \
+  --restart=always \
   -p 2342:2342 \
   -e PHOTOPRISM_ADMIN_PASSWORD="insecure" \
   -v /photoprism/storage \
-  -v ~/Pictures:/photoprism/originals \
+  -v ~/mnt/sda/Photoprism:/photoprism/originals \
   photoprism/photoprism
 ```
 
