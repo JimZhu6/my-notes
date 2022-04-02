@@ -331,3 +331,21 @@ docker run -d \
 ```
 
 [配置选项文档](https://docs.photoprism.app/getting-started/config-options/)
+
+带导入文件夹的启动命令
+
+```bash
+docker run -d \
+  --name photoprism \
+  --security-opt seccomp=unconfined \
+  --security-opt apparmor=unconfined \
+  --restart=always \
+  -p 2342:2342 \
+  -e PHOTOPRISM_ADMIN_PASSWORD="insecure" \
+  -v /photoprism/storage \
+  -v ~/Photoprism:/photoprism/originals \
+  -v ~/Photoprism/import:/photorism/import \
+  photoprism/photoprism
+
+```
+
