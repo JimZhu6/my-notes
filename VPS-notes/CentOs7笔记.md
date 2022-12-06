@@ -97,6 +97,14 @@ $ ssh -T git@gitee.com
 $ ssh -T git@github.com
 ```
 
+如果遇到“无法连接到github.com 22端口”的报错，可以在config文件内做出如下修改
+
+```bash
+Host github.com
+HostName ssh.github.com
+Port 443
+```
+
 ### 共用key
 
 将要共用的公钥私钥复制到当前用户的根目录的.ssh文件夹内：`/.ssh/`
